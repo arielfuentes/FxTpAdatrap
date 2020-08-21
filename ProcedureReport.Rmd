@@ -1,0 +1,105 @@
+---
+title: "Adatrap Adjustment Procedure"
+author: "Ariel Fuentes"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+    math: katex
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+On this report I will explain the process built to create the mtx of TransCAD and a new DDBB which the Transit Assigment will be adjusted to.
+
+## Steps
+
+# 1. Acquire data:  
+
+To this I have to query the trips table from Adatrap
+
+```{sql, eval=F}
+SELECT SUM(CAST(factorexpansion AS FLOAT)) AS Dda, 
+periodomediodeviaje, 
+tipodia, 
+paraderosubida, 
+paraderobajada, 
+netapa, 
+tipotransporte_1era,	
+tipotransporte_2da, 
+tipotransporte_3era,	
+tipotransporte_4ta,	
+serv_1era_etapa,	
+serv_2da_etapa,	
+serv_3era_etapa, 
+serv_4ta_etapa,	
+linea_metro_subida_1,	
+linea_metro_subida_2,	
+linea_metro_subida_3,	
+linea_metro_subida_4,	
+linea_metro_bajada_1,	
+linea_metro_bajada_2,	
+linea_metro_bajada_3,	
+linea_metro_bajada_4,	
+paraderosubida_1era,	
+paraderosubida_2da,	
+paraderosubida_3era,	
+paraderosubida_4ta,	
+paraderobajada_1era,	
+paraderobajada_2da,	
+paraderobajada_3era,	
+paraderobajada_4ta
+FROM [uchile].[dbo].[viajes201908]
+WHERE periodomediodeviaje = '04 - PMA' AND 
+paraderosubida <> '-' AND 
+paraderobajada <> '-' AND 
+factorexpansion <> '-'
+GROUP BY  tipodia, 
+netapa, 
+periodomediodeviaje, 
+paraderosubida, 
+paraderobajada, 
+tipotransporte_1era,	
+tipotransporte_2da, 
+tipotransporte_3era,	
+tipotransporte_4ta,	
+serv_1era_etapa,	
+serv_2da_etapa,	
+serv_3era_etapa, 
+serv_4ta_etapa,	
+linea_metro_subida_1,	
+linea_metro_subida_2,	
+linea_metro_subida_3,	
+linea_metro_subida_4,	
+linea_metro_bajada_1,	
+linea_metro_bajada_2,	
+linea_metro_bajada_3,	
+linea_metro_bajada_4,	
+paraderosubida_1era,	
+paraderosubida_2da,	
+paraderosubida_3era,	
+paraderosubida_4ta,	
+paraderobajada_1era,	
+paraderobajada_2da,	
+paraderobajada_3era,	
+paraderobajada_4ta;
+```
+
+Obviously, the project flow is parameterized with a function to be query on different tables and also on different times of the day. The function is called **BBDD_vjs** which can be found in the *ipt.R file*.
+
+# 2. Fix subway station names: 
+
+In this part of the process there a function called **vjs_stpfix** found in the file with the same name. Which standarize names when there is a common stations within metro lines.
+
+# 3. Wrangling data: 
+
+This part is the whole muscle of the process flux, this is dealt on the file *wrg_dt.R*, the first chunk is to unify the mode and service used in each trip of the user travel pattern. After that factors are created to remove invalid  travel pattern and to impute those which his pattern is suspected from the data available.
+
+# 4. Main:
+
+This is the ultimate file which call all the functions and assembly the process and create all the necessary outputs.
