@@ -94,11 +94,12 @@ Obviously, the project flow is parameterized with a function to be query on diff
 
 # 2. Fix subway station names: 
 
-In this part of the process there a function called **vjs_stpfix** found in the file with the same name. Which standarize names when there is a common stations within metro lines.
+In this part of the process there a function called **vjs_stpfix** found in the file with the same name. Which standarize names when there is a common stations within metro lines, although always it must be checked whether there is data on the *'linea_metro_bajada'* columns or not, to fix accordingly. 
 
 # 3. Wrangling data: 
 
-This part is the whole muscle of the process flux, this is dealt on the file *wrg_dt.R*, the first chunk is to unify the mode and service used in each trip of the user travel pattern. After that factors are created to remove invalid  travel pattern and to impute those which his pattern is suspected from the data available.
+This part is the whole muscle of the process flux, this is dealt on the file *wrg_dt.R*, the first chunk is to unify the mode and service used in each trip of the user travel pattern. After that factors are created to remove invalid  travel pattern and to impute those which his pattern is suspected from the data available. Also it's added columns which contain submode and the stops nomenclature for users. 
+Removing trips based on operational data is only applied on the mtx file.
 
 # 4. Main:
 
