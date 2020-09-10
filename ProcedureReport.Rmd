@@ -104,3 +104,19 @@ Removing trips based on operational data is only applied on the mtx file.
 # 4. Main:
 
 This is the ultimate file which call all the functions and assembly the process and create all the necessary outputs.
+
+# Final Steps:
+
+After run the process by *DTPM Periods* it is necessary to append all the files to a single one, however this will require more *RAM memory* than a machine usually has. 
+This challenge can be solved by run a process in the **Command Prompt** which is really fast.
+
+````{bash, eval = F}
+#set path
+cd C:\Users...\arregloViajes\output\trip
+#find pattern of filenames
+type trip*.csv >> newfilename.csv
+#remove column names
+findstr /v per newfilename.csv > newfilename2.csv
+````
+
+After this we finally can uppload the data to a Database Management System to a a better handling of the postprocessed data. 
